@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Игра по физике: Электрическое поле 2026 🎄</title>
+<style>
+/* ========================= */
+/* Основные стили страницы   */
+/* ========================= */
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
+    color: white;
+    overflow-x: hidden;
+}
+
+/* Падающий снег */
+.snowflake {
+    position: fixed;
+    top: -10px;
+    color: white;
+    font-size: 12px;
+    animation: fall linear infinite;
+    z-index: 10;
+}
+@keyframes fall {
+    to { transform: translateY(110vh); }
+}
+
+/* Новогодние огни */
+.lights {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    z-index: 20;
+}
+.bulb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    animation: blink 1s infinite alternate;
+}
+.bulb:nth-child(1) { background: red; }
+.bulb:nth-child(2) { background: yellow; }
+.bulb:nth-child(3) { background: lime; }
+.bulb:nth-child(4) { background: cyan; }
+.bulb:nth-child(5) { background: orange; }
+
+@keyframes blink {
+    from { opacity: 0.3; }
+    to { opacity: 1; }
+}
+
+/* Заголовок и праздничный год */
+header {
+    text-align: center;
+    padding: 30px 10px;
+}
+.year {
+    font-size: 60px;
+    font-weight: 700;
+    background: linear-gradient(45deg, red, gold, green);
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: glow 1.5s infinite alternate;
+}
+@keyframes glow {
+    from { text-shadow: 0 0 10px gold; }
+    to { text-shadow: 0 0 30px red; }
+}
+
+/* Контейнер контента */
+.container {
+    padding: 15px;
+    max-width: 800px;
+    margin: auto;
+}
+
+/* Кнопки */
+button {
+    background: linear-gradient(45deg, #ff512f, #dd2476);
+    border: none;
+    padding: 12px 20px;
+    margin: 10px;
+    color: white;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.5);
+}
+
+/* Блок с вариантами ответов */
+.answers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Карточки информации о физиках */
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 15px;
+    margin: 10px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+}
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+/* Скрытые элементы */
+.hidden { display:none; }
+
+/* Адаптация под мобильные */
+@media(max-width:600px){
+    .year { font-size: 40px; }
+    button { width: 100%; }
+    .card { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Новогодние огни -->
+<div class="lights">
+    <div class="bulb"></div>
+    <div class="bulb"></div>
+    <div class="bulb"></div>
+    <div class="bulb"></div>
+    <div class="bulb"></div>
+</div>
+
+<header>
+    <h1>🎮 Игра по физике: Электрическое поле</h1>
+    <div class="year">2026 🎄</div>
+</header>
+
+<div class="container">
+
+<!-- Меню выбора уровня и информация о физиках -->
+<div id="menu">
+    <h2>Выберите уровень сложности:</h2>
+    <button onclick="startGame('easy')">🟢 Легкий</button>
+    <button onclick="startGame('medium')">🟡 Средний</button>
+    <button onclick="startGame('hard')">🔴 Сложный</button>
+
+    <h2>👩‍🔬 Великие физики</h2>
+    <div class="card"><b>Майкл Фарадей</b> — открыл явление электромагнитной индукции.</div>
+    <div class="card"><b>Шарль Кулон</b> — сформулировал закон взаимодействия зарядов.</div>
+    <div class="card"><b>Джеймс Клерк Максвелл</b> — создал теорию электромагнитного поля.</div>
+    <div class="card"><b>Андре-Мари Ампер</b> — основоположник электродинамики.</div>
+</div>
+
+<!-- Викторина -->
+<div id="quiz" class="hidden">
+    <h2 id="question"></h2>
+    <div class="answers" id="answers"></div>
+    <button onclick="nextQuestion()">➡ Следующий</button>
+</div>
+
+<!-- Результат -->
+<div id="result" class="hidden">
+    <h2 id="score"></h2>
+    <button onclick="location.reload()">🔄 Начать заново</button>
+</div>
+
+<script>
+/* Падающий снег */
+for (let i=0;i<50;i++){
+    let snow = document.createElement("div");
+    snow.className="snowflake";
+    snow.innerHTML="❄";
+    snow.style.left=Math.random()*100+"vw";
+    snow.style.animationDuration=(3+Math.random()*5)+"s";
+    snow.style.fontSize=(10+Math.random()*20)+"px";
+    document.body.appendChild(snow);
+}
+
+/* Игра */
+let questions=[];
+let current=0;
+let points=0;
+
+/* 30 вопросов (по 10 на уровень) */
+const allQuestions = {
+easy:[
+{q:"Что такое электрическое поле?",a:["Вид материи вокруг заряда","Звук","Температура","Сила трения"],c:0},
+{q:"Единица напряженности?",a:["Ньютон","Вольт","Н/Кл","Ампер"],c:2},
+{q:"Кто открыл закон Кулона?",a:["Фарадей","Кулон","Ньютон","Эйнштейн"],c:1},
+{q:"Заряд единицы положительный?",a:["Да","Нет","Зависит","Неизвестно"],c:0},
+{q:"Что измеряет кулон?",a:["Силу","Заряд","Энергию","Плотность"],c:1},
+{q:"Направление линии поля?",a:["От + к -","От - к +","Вокруг","Произвольно"],c:0},
+{q:"Сила на заряд в поле?",a:["F=qE","F=ma","F=U/I","F=mgh"],c:0},
+{q:"Единица заряда?",a:["Кулон","Вольт","Ньютон","Ампер"],c:0},
+{q:"Электрон заряд?",a:["+","-","0","Неизвестно"],c:1},
+{q:"Положительный пробный заряд?",a:["Отталкивается от +","Притягивается к +","Не движется","Всё верно"],c:0}],
+medium:[
+{q:"Формула закона Кулона?",a:["F=kq1q2/r2","E=mc2","U=IR","A=Fs"],c:0},
+{q:"Потенциал измеряется в?",a:["Вольт","Ньютон","Кулон","Ом"],c:0},
+{q:"Направление поля у отрицательного заряда?",a:["К заряду","От заряда","Вбок","Вверх"],c:0},
+{q:"Электрическое поле на поверхности проводника?",a:["0","Максимальное","Зависит","Равномерное"],c:0},
+{q:"Диэлектрик увеличивает?",a:["Е","С","Q","V"],c:1},
+{q:"Сила между точечными зарядами обратно пропорциональна?",a:["r²","r","r³","r⁴"],c:0},
+{q:"Напряженность в центре сферы с равномерным зарядом?",a:["0","Макс","Мин","Зависит"],c:0},
+{q:"Кто создал теорию поля?",a:["Максвелл","Фарадей","Кулон","Ампер"],c:0},
+{q:"Линии поля параллельны?",a:["В конденсаторе","В точечном","В сферическом","Везде"],c:0},
+{q:"Работа поля?",a:["A=qEd","F=ma","P=UI","A=mc²"],c:0}],
+hard:[
+{q:"Энергия точечного заряда?",a:["U=kq1q2/r","E=mc2","A=Fs","P=UI"],c:0},
+{q:"Связь E и F?",a:["E=F/q","F=E/q","E=q/F","Нет связи"],c:0},
+{q:"Линии напряженности пересекаются?",a:["Да","Нет","Иногда","Всегда"],c:1},
+{q:"Потенциал внутри проводника?",a:["Постоянный","Растет","Уменьшается","Колеблется"],c:0},
+{q:"Диэлектрик это?",a:["Проводник","Изолятор","Источник","Катушка"],c:1},
+{q:"Работа поля по замкнутому пути?",a:["0","Макс","Мин","Зависит"],c:0},
+{q:"Электростатическая индукция?",a:["Да","Нет","Иногда","Зависит"],c:0},
+{q:"Сила на диполь в однородном поле?",a:["Нет","Есть","Зависит","Произвольно"],c:0},
+{q:"Плотность потока?",a:["Φ=E*S","F=qE","U=IR","P=UI"],c:0},
+{q:"Поле точечного диполя уравнение?",a:["E~1/r³","E~1/r²","E~r","E~r²"],c:0}]
+};
+
+/* Функции игры */
+function startGame(level){
+    questions = [...allQuestions[level]];
+    shuffle(questions);
+    document.getElementById("menu").classList.add("hidden");
+    document.getElementById("quiz").classList.remove("hidden");
+    current=0; points=0;
+    showQuestion();
+}
+
+function showQuestion(){
+    let q=questions[current];
+    document.getElementById("question").innerText=q.q;
+    let answersDiv=document.getElementById("answers");
+    answersDiv.innerHTML="";
+    let shuffled=[...q.a]; shuffle(shuffled);
+    shuffled.forEach(ans=>{
+        let btn=document.createElement("button");
+        btn.innerText=ans;
+        btn.onclick=()=>{
+            if(ans===q.a[q.c]){ points++; btn.style.background="green"; }
+            else{ btn.style.background="red"; }
+        };
+        answersDiv.appendChild(btn);
+    });
+}
+
+function nextQuestion(){
+    current++;
+    if(current>=questions.length){
+        document.getElementById("quiz").classList.add("hidden");
+        document.getElementById("result").classList.remove("hidden");
+        document.getElementById("score").innerText="Ваш результат: "+points+" из "+questions.length;
+    } else showQuestion();
+}
+
+function shuffle(array){ array.sort(()=>Math.random()-0.5); }
+</script>
+
+</body>
+</html>
