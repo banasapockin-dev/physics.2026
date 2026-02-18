@@ -1,0 +1,154 @@
+/* ========================= */
+/* Основные стили страницы   */
+/* ========================= */
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
+    color: white;
+    overflow-x: hidden;
+}
+
+/* ========================= */
+/* Падающий снег ❄           */
+/* ========================= */
+.snowflake {
+    position: fixed;
+    top: -10px;
+    color: white;
+    font-size: 12px;
+    animation: fall linear infinite;
+    z-index: 10;
+}
+@keyframes fall {
+    to { transform: translateY(110vh); }
+}
+
+/* ========================= */
+/* Новогодние огни 🎄        */
+/* ========================= */
+.lights {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    z-index: 20;
+}
+.bulb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    animation: blink 1s infinite alternate;
+}
+.bulb:nth-child(1) { background: red; }
+.bulb:nth-child(2) { background: yellow; }
+.bulb:nth-child(3) { background: lime; }
+.bulb:nth-child(4) { background: cyan; }
+.bulb:nth-child(5) { background: orange; }
+
+@keyframes blink {
+    from { opacity: 0.3; }
+    to { opacity: 1; }
+}
+
+/* ========================= */
+/* Заголовок и праздничный год */
+/* ========================= */
+header {
+    text-align: center;
+    padding: 30px 10px;
+}
+header h1 {
+    margin: 0;
+    font-size: 2em;
+}
+.year {
+    font-size: 60px;
+    font-weight: 700;
+    background: linear-gradient(45deg, red, gold, green);
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: glow 1.5s infinite alternate;
+}
+@keyframes glow {
+    from { text-shadow: 0 0 10px gold; }
+    to { text-shadow: 0 0 30px red; }
+}
+
+/* ========================= */
+/* Контейнер контента        */
+/* ========================= */
+.container {
+    padding: 15px;
+    max-width: 800px;
+    margin: auto;
+}
+
+/* ========================= */
+/* Кнопки с эффектом         */
+/* ========================= */
+button {
+    background: linear-gradient(45deg, #ff512f, #dd2476);
+    border: none;
+    padding: 12px 20px;
+    margin: 10px;
+    color: white;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.5);
+}
+
+/* ========================= */
+/* Блок с вариантами ответов */
+/* ========================= */
+.answers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* ========================= */
+/* Карточки информации о физиках */
+/* ========================= */
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 15px;
+    margin: 10px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+}
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+/* ========================= */
+/* Скрытые элементы          */
+/* ========================= */
+.hidden {
+    display: none;
+}
+
+/* ========================= */
+/* Адаптация под мобильные устройства */
+@media (max-width: 600px) {
+    .year {
+        font-size: 40px;
+    }
+    button {
+        width: 100%;
+    }
+    .card {
+        font-size: 14px;
+    }
+}
